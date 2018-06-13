@@ -1,0 +1,9 @@
+/bazel-*
+/.dockerignore
+/release/*
+!/release/protoc-gen-angular
+/BUILD
+/WORKSPACE
+/docker-compose.yml
+*.cc
+*.h

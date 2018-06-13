@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  protoc-gen-angular:
+    image: protoc-gen-angular
+    build:
+      context: ./
+    volumes:
+      - type: bind
+        source: ./release
+        target: /protoc-gen-angular/bazel-bin
+        volume:
+          nocopy: true

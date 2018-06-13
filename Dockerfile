@@ -17,8 +17,6 @@ WORKDIR /protoc-gen-angular
 
 COPY WORKSPACE BUILD ./
 
-RUN bazel build @com_google_protobuf//:protoc_lib
-
 COPY ./ ./
 
-CMD bazel build :protoc-gen-angular
+CMD bazel build -c opt :protoc-gen-angular
