@@ -24,4 +24,14 @@ public:
     , std::string*                                                 error
     ) const override;
 
+private:
+
+  bool GenerateFileGroup
+    ( const std::string&                                           rootDir
+    , const std::vector<const google::protobuf::FileDescriptor*>&  files
+    , const std::string&                                           parameter
+    , google::protobuf::compiler::GeneratorContext*                context
+    , std::string*                                                 error
+    ) const;
+
 };

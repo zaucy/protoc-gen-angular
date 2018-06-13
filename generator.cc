@@ -1,3 +1,4 @@
+#include <filesystem>
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
@@ -526,17 +527,17 @@ AngularGrpcCodeGenerator::AngularGrpcCodeGenerator() {}
 
 AngularGrpcCodeGenerator::~AngularGrpcCodeGenerator() {}
 
-bool AngularGrpcCodeGenerator::GenerateAll
-  ( const std::vector<const FileDescriptor*>&  files
-  , const string&                              parameter
-  , GeneratorContext*                          context
-  , string*                                    error
+bool AngularGrpcCodeGenerator::GenerateFileGroup
+  ( const string&                         rootDir
+  , const vector<const FileDescriptor*>&  files
+  , const string&                         parameter
+  , GeneratorContext*                     context
+  , string*                               error
   ) const
 {
-
   std::vector<const ServiceDescriptor*> services;
   std::unique_ptr<ZeroCopyOutputStream> moduleFileStream(
-    context->Open("index.ts")
+    context->Open(rootDir + "/index.ts")
   );
 
   for(auto file : files) {
@@ -554,6 +555,44 @@ bool AngularGrpcCodeGenerator::GenerateAll
   Printer printer(moduleFileStream.get(), '$');
 
   PrintAngularModuleIndex(printer, services);
+
+  return true;
+}
+
+
+bool AngularGrpcCodeGenerator::GenerateAll
+  ( const std::vector<const FileDescriptor*>&  files
+  , const string&                              parameter
+  , GeneratorContext*                          context
+  , string*                                    error
+  ) const
+{
+
+  std::map<string, std::vector<const FileDescriptor*>> dirFiles;
+
+  for(auto file : files) {
+    string filename = file->name();
+    std::filesystem::path filePath{filename};
+    string dir = filePath.parent_path().string();
+
+    auto findIt = dirFiles.find(dir);
+
+    if(findIt == dirFiles.end()) {
+      auto pair = dirFiles.insert({dir, vector<const FileDescriptor*>{}});
+      findIt = pair.first;
+    }
+
+    findIt->second.push_back(file);
+  }
+
+  for(const auto& pair : dirFiles) {
+    const auto& dir = pair.first;
+    const auto& files = pair.second;
+
+    if(!GenerateFileGroup(dir, files, parameter, context, error)) {
+      return false;
+    }
+  }
 
   return true;
 }
@@ -622,6 +661,10 @@ bool AngularGrpcCodeGenerator::Generate
     return false;
   }
 
+  string filename = file->name();
+  std::filesystem::path filePath{filename};
+  string dir = filePath.parent_path().string();
+
   if(grpcWebOutDir[grpcWebOutDir.size()-1] == '/') {
     grpcWebOutDir = grpcWebOutDir.substr(1, grpcWebOutDir.size() - 1);
   }
@@ -642,7 +685,7 @@ bool AngularGrpcCodeGenerator::Generate
   for(auto i=0; serviceCount > i; ++i) {
     auto service = file->service(i);
     std::unique_ptr<ZeroCopyOutputStream> fileStream(
-      context->Open(service->name() + ".service.ts")
+      context->Open(dir + "/" + service->name() + ".service.ts")
     );
 
     Printer printer(fileStream.get(), '$');
