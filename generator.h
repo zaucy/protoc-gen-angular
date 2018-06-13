@@ -17,7 +17,7 @@ public:
     , std::string*                                   error
     ) const override;
 
-  bool AngularGrpcCodeGenerator::GenerateAll
+  bool GenerateAll
     ( const std::vector<const google::protobuf::FileDescriptor*>&  files
     , const std::string&                                           parameter
     , google::protobuf::compiler::GeneratorContext*                context

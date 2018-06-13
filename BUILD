@@ -11,6 +11,11 @@ CXX17_COPT = select({
   "//conditions:default": ["-std=c++17"],
 })
 
+CXXFS_LINKOPTS = select({
+	":msvc": [],
+  "//conditions:default": ["-lstdc++fs"],
+})
+
 cc_binary(
   name = "protoc-gen-angular",
   srcs = [
@@ -21,5 +26,6 @@ cc_binary(
   deps = [
     "@com_google_protobuf//:protoc_lib"
   ],
+  linkopts = [] + CXXFS_LINKOPTS,
   copts = [] + CXX17_COPT,
 )
