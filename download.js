@@ -16,10 +16,11 @@ if(!fs.existsSync(PLUGIN_PATH)) {
     `https://github.com/zaucy/protoc-gen-angular/releases/download/` +
     `v${version}/protoc-gen-angular-${PLATFORM}-${ARCH}${EXTNAME}`;
 
-  progressDownload(PLUGIN_DOWNLOAD_URL, PLUGIN_PATH).catch(err => {
-    console.error(
-      "Couldn't download " + PLUGIN_DOWNLOAD_URL + ':', err.message
-    );
-    process.exit(1);
-  });
+  progressDownload(PLUGIN_DOWNLOAD_URL, path.dirname(PLUGIN_PATH))
+    .catch(err => {
+      console.error(
+        "Couldn't download " + PLUGIN_DOWNLOAD_URL + ':', err.message
+      );
+      process.exit(1);
+    });
 }
