@@ -1,6 +1,6 @@
 {
   "name": "@grpc-gen/protoc-gen-angular",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "main": "index.js",
   "repository": "https://github.com/zaucy/protoc-gen-angular.git",
   "author": "Ezekiel Warren",
