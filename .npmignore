@@ -1,7 +1,7 @@
 /bazel-*
 /.dockerignore
 /release/*
-!/release/protoc-gen-angular
+!/release/.gitkeep
 /BUILD
 /WORKSPACE
 /docker-compose.yml
