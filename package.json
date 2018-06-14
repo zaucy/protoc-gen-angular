@@ -1,0 +1,17 @@
+{
+  "name": "@grpc-gen/protoc-gen-angular",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/zaucy/protoc-gen-angular.git",
+  "author": "Ezekiel Warren",
+  "license": "MIT",
+  "bin": {
+    "protoc-gen-angular": "cli.js"
+  },
+  "scripts": {
+    "postinstall": "node download.js"
+  },
+  "dependencies": {
+    "progress-download": "^1.0.4"
+  }
+}
