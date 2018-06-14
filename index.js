@@ -11,10 +11,8 @@ const PLUGIN_PATH = path.resolve(
   __dirname, 'release', `protoc-gen-angular-${PLATFORM}-${ARCH}${EXTNAME}`
 );
 
-module.exports = function() {
-  return child_process.execFile.apply(
-    child_process, [PLUGIN_PATH].concat(arguments)
-  );
+module.exports = function(args, options) {
+  return child_process.spawn(PLUGIN_PATH, args||[], options);
 };
 
 module.exports.PLUGIN_PATH = PLUGIN_PATH;

@@ -3,6 +3,6 @@
 const protocGenAngular = require("./index.js");
 
 protocGenAngular(process.argv.slice(2), {
+  windowsHide: true,
   stdio: 'inherit',
-  windowsHide: true
 });
