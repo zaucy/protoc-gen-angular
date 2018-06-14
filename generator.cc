@@ -107,7 +107,7 @@ namespace {
 
     printer.Print(vars,
       "request: request,\n"
-      "host: 'https://' + location.hostname,\n"
+      "host: (<any>window).DEFAULT_ANGULAR_GRPC_HOST || 'https://' + location.hostname,\n"
       "metadata: metadata,\n"
       "onMessage: response => this._ngZone.run(() => {\n"
       "  onMessage(response);\n"
