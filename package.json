@@ -9,7 +9,8 @@
     "protoc-gen-angular": "cli.js"
   },
   "scripts": {
-    "postinstall": "node download.js"
+    "postinstall": "node download.js",
+    "test": "exit 0"
   },
   "dependencies": {
     "progress-download": "^1.0.4"
