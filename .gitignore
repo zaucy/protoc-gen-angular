@@ -2,4 +2,3 @@
 /.vscode
 /release/*
 !/release/.gitkeep
-!/release/protoc-gen-angular

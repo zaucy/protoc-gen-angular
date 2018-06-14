@@ -19,4 +19,4 @@ COPY WORKSPACE BUILD ./
 
 COPY ./ ./
 
-CMD bazel build -c opt :protoc-gen-angular
+CMD bazel build -c opt :protoc-gen-angular && cp ./bazel-bin/protoc-gen-angular ./release/protoc-gen-angular-linux-x64

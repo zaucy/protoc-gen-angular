@@ -8,6 +8,6 @@ services:
     volumes:
       - type: bind
         source: ./release
-        target: /protoc-gen-angular/bazel-bin
+        target: /protoc-gen-angular/release
         volume:
           nocopy: true
