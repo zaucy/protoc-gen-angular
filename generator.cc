@@ -519,8 +519,10 @@ void PrintAngularModuleIndex
   printer.Outdent();
   printer.Print("})\n");
 
-  printer.Print("export default class GeneratedGrpcAngularModule {\n");
-  printer.Print("};\n");
+  printer.Print("export class GeneratedGrpcAngularModule {\n");
+  printer.Print("};\n\n");
+
+  printer.Print("export default GeneratedGrpcAngularModule;\n");
 }
 
 AngularGrpcCodeGenerator::AngularGrpcCodeGenerator() {}
