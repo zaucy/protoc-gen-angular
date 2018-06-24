@@ -422,7 +422,8 @@ namespace {
     vars["service_name"] = service.name();
     vars["service_import"] = filename + "_pb_service";
     printer.Print("import { Injectable, NgZone } from '@angular/core';\n");
-    printer.Print("import { Observable } from 'rxjs/Observable';\n");   printer.Print("import { Subject } from 'rxjs/Subject';\n");
+    printer.Print("import { Observable } from 'rxjs';\n");
+    printer.Print("import { Subject } from 'rxjs';\n");
     printer.Print("import { grpc } from 'grpc-web-client';\n\n");
     
     auto importTypes = GetAllServiceMessages(service);
