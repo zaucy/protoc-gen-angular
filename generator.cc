@@ -102,7 +102,7 @@ namespace {
     , Printer&             printer
     )
   {
-    printer.Print(vars, "grpc.invoke(__service.$method_name$, {\n");
+    printer.Print(vars, "let req = grpc.invoke(__service.$method_name$, {\n");
     printer.Indent();
 
     printer.Print(vars,
@@ -248,6 +248,8 @@ namespace {
         break;
     }
 
+    printer.Print("ret.close = () => req.close();\n");
+
     printer.Print("return ret;\n");
   }
 
@@ -359,14 +361,14 @@ namespace {
     printer.Print(vars,
       "$method_name$("
         "request: $input_type$"
-      "): Observable<$output_type$>;\n"
+      "): {close():void}&Observable<$output_type$>;\n"
     );
 
     printer.Print(vars,
       "$method_name$("
         "request: $input_type$, "
         "metadata: grpc.Metadata"
-      "): Observable<$output_type$>;\n"
+      "): {close():void}&Observable<$output_type$>;\n"
     );
     
     printer.Print(vars,
@@ -395,7 +397,7 @@ namespace {
         "arg2?: ($msg_cb$)|($error_cb$), "
         "arg3?: ($error_cb$)|($end_cb$), "
         "arg4?: $end_cb$"
-      "): Observable<$output_type$>|void {\n"
+      "): {close():void}&Observable<$output_type$>|void {\n"
     );
 
     printer.Indent();
@@ -446,7 +448,7 @@ namespace {
 
     printer.Print(vars,
       "import { $service_name$ as __service } from '$grpc_web_import_prefix$/$service_import$';\n\n");
-    
+
     printer.Print("@Injectable()\n");
     printer.Print(("export class " + service.name() + " {\n\n").c_str());
 
