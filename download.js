@@ -16,6 +16,9 @@ if(!fs.existsSync(PLUGIN_PATH)) {
     `v${version}/protoc-gen-angular-${PLATFORM}${EXTNAME}`;
 
   progressDownload(PLUGIN_DOWNLOAD_URL, path.dirname(PLUGIN_PATH))
+    .then(() => {
+      fs.chmodSync(PLUGIN_PATH, '0755');
+    })
     .catch(err => {
       console.error(
         "Couldn't download " + PLUGIN_DOWNLOAD_URL + ':', err.message
