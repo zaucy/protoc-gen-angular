@@ -9,7 +9,7 @@ steps:
 - script: chmod +x ./bazel-installer.sh && ./bazel-installer.sh --user
   workingDirectory: $(Build.SourcesDirectory)
 
-- script: $HOME/bin/bazel build :protoc-gen-angular--linkopt=-static -c opt && cp ./bazel-out/k8-opt/bin/protoc-gen-angular ./release/protoc-gen-angular-linux
+- script: $HOME/bin/bazel build :protoc-gen-angular --linkopt=-static -c opt && cp ./bazel-out/k8-opt/bin/protoc-gen-angular ./release/protoc-gen-angular-linux
   workingDirectory: $(Build.SourcesDirectory)
 
 - task: PublishBuildArtifacts@1
