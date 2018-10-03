@@ -1,0 +1,12 @@
+steps:
+
+- script: choco install bazel || exit 0
+  workingDirectory: $(Build.SourcesDirectory)
+
+- script: bazel build :protoc-gen-angular-c opt && copy .\bazel-out\x64_windows-opt\bin\protoc-gen-angular.exe .\release\protoc-gen-angular-win32.exe
+  workingDirectory: $(Build.SourcesDirectory)
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: $(Build.SourcesDirectory)/release/protoc-gen-angular-win32.exe
+    artifactName: protoc-gen-angular-win32
