@@ -18,6 +18,7 @@ CXXFS_LINKOPTS = select({
 
 cc_binary(
   name = "protoc-gen-angular",
+  linkstatic = True,
   srcs = [
     "generator.cc",
     "generator.h",
