@@ -8,25 +8,25 @@ config_setting(
 
 CXX17_COPT = select({
 	":msvc": ["/std:c++17"],
-  "//conditions:default": ["-std=c++17"],
+	"//conditions:default": ["-std=c++17"],
 })
 
 CXXFS_LINKOPTS = select({
 	":msvc": [],
-  "//conditions:default": ["-lstdc++fs"],
+	"//conditions:default": ["-lstdc++fs"],
 })
 
 cc_binary(
-  name = "protoc-gen-angular",
-  linkstatic = True,
-  srcs = [
-    "generator.cc",
-    "generator.h",
-    "main.cc",
-  ],
-  deps = [
-    "@com_google_protobuf//:protoc_lib"
-  ],
-  linkopts = [] + CXXFS_LINKOPTS,
-  copts = [] + CXX17_COPT,
+	name = "protoc-gen-angular",
+	linkstatic = True,
+	srcs = [
+		"generator.cc",
+		"generator.h",
+		"main.cc",
+	],
+	deps = [
+		"@com_google_protobuf//:protoc_lib"
+	],
+	linkopts = [] + CXXFS_LINKOPTS,
+	copts = [] + CXX17_COPT,
 )
