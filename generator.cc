@@ -1,4 +1,6 @@
 #include <filesystem>
+#include <cctype>
+#include <set>
 #include <google/protobuf/compiler/code_generator.h>
 #include <google/protobuf/descriptor.h>
 #include <google/protobuf/io/printer.h>
@@ -21,6 +23,34 @@ using std::pair;
 using std::vector;
 
 namespace {
+  std::string firstCharToLower(std::string str) {
+    if(str.length() > 0) {
+      str[0] = std::tolower(str[0]);
+    }
+
+    return str;
+  }
+
+  std::string firstCharToUpper(std::string str) {
+    if(str.length() > 0) {
+      str[0] = std::toupper(str[0]);
+    }
+
+    return str;
+  }
+
+  std::string removePathExtname(const std::string& path) {
+    auto dotIndex = path.find_last_of('.');
+
+    if(dotIndex != std::string::npos) {
+      return path.substr(0, dotIndex);
+    }
+
+    return path;
+  }
+}
+
+namespace {
 
   enum GrpcWebImplementation {
     NONE = 0,
@@ -40,8 +70,8 @@ namespace {
       const Descriptor* inputType = method->input_type();
       const Descriptor* outputType = method->output_type();
 
-      messageTypes[inputType->full_name()] = inputType;
-      messageTypes[outputType->full_name()] = outputType;
+      messageTypes[inputType->name()] = inputType;
+      messageTypes[outputType->name()] = outputType;
     }
 
     return messageTypes;
@@ -67,7 +97,7 @@ namespace {
 
     printer.Print(vars, "let responseMetadata: grpc.Metadata = null;\n\n");
 
-    printer.Print(vars, "grpc.invoke(__service.$method_name$, {\n");
+    printer.Print(vars, "grpc.invoke(__service.$Method_name$, {\n");
     printer.Indent();
 
     printer.Print(vars,
@@ -102,7 +132,7 @@ namespace {
     , Printer&             printer
     )
   {
-    printer.Print(vars, "let req = grpc.invoke(__service.$method_name$, {\n");
+    printer.Print(vars, "let req = grpc.invoke(__service.$Method_name$, {\n");
     printer.Indent();
 
     printer.Print(vars,
@@ -136,9 +166,10 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
-    vars["method_name"] = method.name();
-    vars["input_type"] = inputType->full_name();
-    vars["output_type"] = outputType->full_name();
+    vars["method_name"] = firstCharToLower(method.name());
+    vars["Method_name"] = method.name();
+    vars["input_type"] = inputType->name();
+    vars["output_type"] = outputType->name();
 
     printer.Print("let ret, callback, metadata;\n\n");
 
@@ -195,9 +226,10 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
-    vars["method_name"] = method.name();
-    vars["input_type"] = inputType->full_name();
-    vars["output_type"] = outputType->full_name();
+    vars["method_name"] = firstCharToLower(method.name());
+    vars["Method_name"] = method.name();
+    vars["input_type"] = inputType->name();
+    vars["output_type"] = outputType->name();
 
     printer.Print("let ret, metadata, onMessage, onError, onEnd;\n\n");
 
@@ -263,11 +295,12 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
-    vars["method_name"] = method.name();
-    vars["input_type"] = inputType->full_name();
-    vars["output_type"] = outputType->full_name();
+    vars["method_name"] = firstCharToLower(method.name());
+    vars["Method_name"] = method.name();
+    vars["input_type"] = inputType->name();
+    vars["output_type"] = outputType->name();
     vars["cb_signature"] =
-      "(err: any|null, response: " + outputType->full_name() + ", metadata: grpc.Metadata) => void";
+      "(err: any|null, response: " + outputType->name() + ", metadata: grpc.Metadata) => void";
 
     // A few signatures
     printer.Print(vars,
@@ -345,11 +378,12 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
-    vars["method_name"] = method.name();
-    vars["input_type"] = inputType->full_name();
-    vars["output_type"] = outputType->full_name();
+    vars["method_name"] = firstCharToLower(method.name());
+    vars["Method_name"] = method.name();
+    vars["input_type"] = inputType->name();
+    vars["output_type"] = outputType->name();
     vars["msg_cb"] =
-      "(message?: " + outputType->full_name() + ") => void";
+      "(message?: " + outputType->name() + ") => void";
     vars["error_cb"] = "(err) => void";
     vars["end_cb"] = "("
       "code: grpc.Code, "
