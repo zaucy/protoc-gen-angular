@@ -40,7 +40,7 @@ namespace {
       return path.substr(0, slashIndex);
     }
 
-    return path;
+    return "";
   }
 
   std::string firstCharToLower(std::string str) {
