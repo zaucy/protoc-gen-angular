@@ -1,4 +1,4 @@
-FROM zaucy/bazel:latest-gcc
+FROM zaucy/bazel:latest-gcc-4
 
 WORKDIR /protoc-gen-angular
 

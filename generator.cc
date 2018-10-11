@@ -1,4 +1,3 @@
-#include <filesystem>
 #include <cctype>
 #include <set>
 #include <google/protobuf/compiler/code_generator.h>
@@ -23,6 +22,27 @@ using std::pair;
 using std::vector;
 
 namespace {
+
+  std::string removePathExtname(const std::string& path) {
+    auto dotIndex = path.find_last_of('.');
+
+    if(dotIndex != std::string::npos) {
+      return path.substr(0, dotIndex);
+    }
+
+    return path;
+  }
+
+  std::string parentPath(const std::string& path) {
+    auto slashIndex = path.find_last_of('/');
+
+    if(slashIndex != std::string::npos) {
+      return path.substr(0, slashIndex);
+    }
+
+    return path;
+  }
+
   std::string firstCharToLower(std::string str) {
     if(str.length() > 0) {
       str[0] = std::tolower(str[0]);
@@ -37,16 +57,6 @@ namespace {
     }
 
     return str;
-  }
-
-  std::string removePathExtname(const std::string& path) {
-    auto dotIndex = path.find_last_of('.');
-
-    if(dotIndex != std::string::npos) {
-      return path.substr(0, dotIndex);
-    }
-
-    return path;
   }
 }
 
@@ -611,8 +621,7 @@ bool AngularGrpcCodeGenerator::GenerateAll
 
   for(auto file : files) {
     string filename = file->name();
-    std::filesystem::path filePath{filename};
-    string dir = filePath.parent_path().string();
+    string dir = parentPath(filename);
 
     auto findIt = dirFiles.find(dir);
 
@@ -701,8 +710,7 @@ bool AngularGrpcCodeGenerator::Generate
   }
 
   string filename = file->name();
-  std::filesystem::path filePath{filename};
-  string dir = filePath.parent_path().string();
+  string dir = parentPath(filename);
 
   if(grpcWebOutDir[grpcWebOutDir.size()-1] == '/') {
     grpcWebOutDir = grpcWebOutDir.substr(1, grpcWebOutDir.size() - 1);

@@ -34,4 +34,4 @@ WORKDIR C:/protoc-gen-angular
 
 COPY ./ ./
 
-CMD C:\BuildTools\Common7\Tools\VsDevCmd.bat && bazel build -c opt :protoc-gen-angular && copy .\bazel-out\x64_windows-opt\protoc-gen-angular.exe .\release\protoc-gen-angular-win32-x64.exe
+CMD C:\BuildTools\Common7\Tools\VsDevCmd.bat && bazel build -c opt :protoc-gen-angular && copy .\bazel-out\x64_windows-opt\bin\protoc-gen-angular.exe .\release\protoc-gen-angular-win32.exe
