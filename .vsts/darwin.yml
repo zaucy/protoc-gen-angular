@@ -8,7 +8,7 @@ steps:
 - script: chmod +x ./bazel-installer.sh && ./bazel-installer.sh --user
   workingDirectory: $(Build.SourcesDirectory)
 
-- script: bazel build :protoc-gen-angular -c opt && cp ./bazel-out/darwin-opt/bin/protoc-gen-angular./release/protoc-gen-angular-darwin
+- script: bazel build :protoc-gen-angular -c opt && cp ./bazel-out/darwin-opt/bin/protoc-gen-angular ./release/protoc-gen-angular-darwin
   workingDirectory: $(Build.SourcesDirectory)
 
 - task: PublishBuildArtifacts@1
