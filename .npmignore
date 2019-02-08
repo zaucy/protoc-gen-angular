@@ -1,3 +1,5 @@
+/.vscode
+/.vsts
 /bazel-*
 /.dockerignore
 /release/*
