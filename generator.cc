@@ -23,6 +23,18 @@ using std::vector;
 
 namespace {
 
+  std::string getImportPrefix(const std::string& filename) {
+    std::string importPrefix;
+
+    for(const char& c : filename) {
+      if(c == '/') {
+        importPrefix += "../";
+      }
+    }
+
+    return importPrefix;
+  }
+
   std::string removePathExtname(const std::string& path) {
     auto dotIndex = path.find_last_of('.');
 
@@ -467,6 +479,7 @@ namespace {
 
     vars["service_name"] = service.name();
     vars["service_import"] = filename + "_pb_service";
+    vars["file_import_prefix"] = getImportPrefix(filename);
     printer.Print("import { Injectable, NgZone } from '@angular/core';\n");
     printer.Print("import { Observable } from 'rxjs';\n");
     printer.Print("import { Subject } from 'rxjs';\n");
@@ -485,13 +498,13 @@ namespace {
       importVars["type_import"] = filename + "_pb";
 
       printer.Print(importVars,
-        "import { $import_name$ } from '$web_import_prefix$/$type_import$';\n");
+        "import { $import_name$ } from '$file_import_prefix$$web_import_prefix$/$type_import$';\n");
     }
 
     printer.Print("\n");
 
     printer.Print(vars,
-      "import { $service_name$ as __service } from '$grpc_web_import_prefix$/$service_import$';\n\n");
+      "import { $service_name$ as __service } from '$file_import_prefix$$grpc_web_import_prefix$/$service_import$';\n\n");
 
     printer.Print("@Injectable()\n");
     printer.Print(("export class " + service.name() + " {\n\n").c_str());
