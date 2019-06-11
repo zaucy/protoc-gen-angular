@@ -1,12 +1,1 @@
-cc_binary(
-	name = "protoc-gen-angular",
-	visibility = "//visibility:public",
-	srcs = [
-		"generator.cc",
-		"generator.h",
-		"main.cc",
-	],
-	deps = [
-		"@com_google_protobuf//:protoc_lib",
-	],
-)
+exports_files(["index.bzl"] visibility = "//visibility:public")
