@@ -1,9 +1,11 @@
 cc_binary(
 	name = "protoc-gen-angular",
-	visibility = "//visibility:public",
+	visibility = ["//visibility:public"],
 	srcs = [
-		"generator.cc",
-		"generator.h",
+		"angular-generator-options.cc",
+		"angular-generator-options.hh",
+		"angular-generator.cc",
+		"angular-generator.hh",
 		"main.cc",
 	],
 	deps = [

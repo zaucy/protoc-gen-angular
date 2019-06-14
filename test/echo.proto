@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package grpc.gateway.testing;
+
+message EchoRequest {
+  string message = 1;
+}
+
+message EchoResponse {
+  string message = 1;
+}
+
+message ServerStreamingEchoRequest {
+  string message = 1;
+  int32 message_count = 2;
+  int32 message_interval = 3;
+}
+
+message ServerStreamingEchoResponse {
+  string message = 1;
+}
+
+enum Status {
+  UNKNOWN = 0;
+  SUCCESS = 1;
+}
+
+message EchoStatusRequest {
+  Status status = 1;
+}
+
+message EchoStatusResponse {
+  enum InternalStatus {
+    UNKNOWN = 0;
+    SUCCESS = 1;
+  }
+  InternalStatus status = 1;
+}
+
+
+service Echo {
+  rpc Echo(EchoRequest)
+      returns (EchoResponse);
+
+  rpc ServerStreamingEcho(ServerStreamingEchoRequest)
+      returns (stream ServerStreamingEchoResponse);
+  
+  rpc EchoStatus(EchoStatusRequest)
+      returns (EchoStatusResponse);
+}

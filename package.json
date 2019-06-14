@@ -1,0 +1,29 @@
+{
+  "name": "angular-grpc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@bazel/karma": "^0.31.1",
+    "@bazel/typescript": "^0.31.1",
+    "typescript": "^3.5.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "rebuild": "npm rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zaucy/protoc-gen-angular.git"
+  },
+  "author": "Ezekiel Warren",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zaucy/protoc-gen-angular/issues"
+  },
+  "homepage": "https://github.com/zaucy/protoc-gen-angular#readme"
+}

@@ -1,1 +1,1 @@
-exports_files(["index.bzl"] visibility = "//visibility:public")
+exports_files(["index.bzl"], visibility = ["//visibility:public"])

@@ -1,5 +1,5 @@
 #include <google/protobuf/compiler/plugin.h>
-#include "generator.h"
+#include "angular-generator.hh"
 
 using google::protobuf::compiler::PluginMain;
 

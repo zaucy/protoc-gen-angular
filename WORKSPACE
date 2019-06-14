@@ -11,6 +11,7 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.31.1/rules_nodejs-0.31.1.tar.gz"],
 )
 
+
 http_archive(
     name = "io_bazel_rules_sass",
     sha256 = "4c87befcb17282b039ba8341df9a6cc45f461bf05776dcf35c7e40c7e79ce374",
@@ -57,3 +58,10 @@ ts_setup_workspace()
 # Setup the rules_sass toolchain
 load("@io_bazel_rules_sass//sass:sass_repositories.bzl", "sass_repositories")
 sass_repositories()
+
+http_archive(
+    name = "com_google_protobuf",
+    sha256 = "b7220b41481011305bf9100847cf294393973e869973a9661046601959b2960b",
+    strip_prefix = "protobuf-3.8.0",
+    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v3.8.0/protobuf-all-3.8.0.tar.gz"],
+)
