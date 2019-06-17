@@ -135,6 +135,7 @@ def ng_proto_module(
   grpc_web_implementation = None,
   web_import_prefix = None,
   grpc_web_import_prefix = None,
+  ts_deps = [],
   plugin = "@com_github_zaucy_protoc_gen_angular//protoc-gen-angular",
   protoc = "@com_google_protobuf//:protoc",
   **kwargs):
@@ -157,6 +158,13 @@ def ng_proto_module(
     "@npm//@angular/core",
     "@npm//rxjs",
   ]
+
+  if grpc_web_implementation == "improbable-eng":
+    ng_deps.append("@npm//@improbable-eng/grpc-web")
+  elif grpc_web_implementation == "google":
+    ng_deps.append("@npm//grpc-web")
+
+  ng_deps.extend(ts_deps)
 
   ng_module(
     name = name,
