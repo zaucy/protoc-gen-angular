@@ -31,10 +31,10 @@ def _ng_proto_module_srcs_impl(ctx):
 
   outFiles = []
 
-  for src in sources:
+  for src in sources.to_list():
     srcBasename = src.path.rsplit("." + src.extension, 1)[0]
 
-    for protoPath in protoPaths:
+    for protoPath in protoPaths.to_list():
       if srcBasename.startswith(protoPath):
         srcBasename = srcBasename[len(protoPath)+1:]
 
@@ -69,19 +69,18 @@ def _ng_proto_module_srcs_impl(ctx):
   for protoSrcsRoot in protoSrcsRoots:
       protocArgs.append("-I" + protoSrcsRoot)
 
-  for protoPath in protoPaths:
+  for protoPath in protoPaths.to_list():
     if protoPath.startswith('external/'):
       protocArgs.append("-I" + ctx.bin_dir.path + "/" + protoPath)
     else:
       protocArgs.append("-I" + protoPath)
 
-  for src in sources:
+  for src in sources.to_list():
     protocArgs.append(src.path)
 
   ctx.actions.run(
-    inputs = sources.to_list() + [
-      ctx.executable.plugin,
-    ],
+    inputs = sources.to_list(),
+    tools = [ctx.executable.plugin],
     outputs = outFiles,
     executable = ctx.executable.protoc,
     arguments = protocArgs,

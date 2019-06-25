@@ -26,8 +26,9 @@ namespace {
     inline ImprobableEngGrpcWebInfo() {
       commonjsImport = "@improbable-eng/grpc-web";
       commonjsImportAs = "{ grpc }";
-      metadataTypeName = "grpc.Metadata";
       serviceFileSuffix = "_pb_service";
+      metadataTypeName = "grpc.Metadata";
+      statusCodeNamespace = "grpc.Code";
     }
   };
 
@@ -35,8 +36,9 @@ namespace {
     inline GoogleGrpcWebInfo() {
       commonjsImport = "grpc-web";
       commonjsImportAs = "* as grpc";
+      serviceFileSuffix = "_grpc_web_pb";
       metadataTypeName = "grpc.Metadata";
-      serviceFileSuffix = "_grpc_pb";
+      statusCodeNamespace = "grpc.StatusCode";
     }
   };
 }
@@ -46,7 +48,8 @@ bool GrpcWebImplementationInfo::isValid() const {
     !commonjsImport.empty() &&
     !metadataTypeName.empty() &&
     !commonjsImportAs.empty() &&
-    !serviceFileSuffix.empty();
+    !serviceFileSuffix.empty() &&
+    !statusCodeNamespace.empty();
 }
 
 AngularGrpcCodeGeneratorOptions::AngularGrpcCodeGeneratorOptions

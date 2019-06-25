@@ -158,11 +158,7 @@ namespace {
     , Printer&             printer
     )
   {
-    printer.Print(vars,
-      "callback(new Error('"
-        "protoc-gen-angular unary call not implemented"
-      "'));\n\n"
-    );
+    printer.Print(vars, "let req = this._client.$method_name$(request, metadata, callback);\n");
   }
 
   void PrintAngularServiceImprobableEngUnaryCall
@@ -185,7 +181,7 @@ namespace {
       "  callback(null, response, responseMetadata || new grpc.Metadata());\n"
       "}),\n"
       "onEnd: (code, msg, metadata) => this._ngZone.run(() => {\n"
-      "  if(code != grpc.Code.OK) {\n"
+      "  if(code != $statusCodeNamespace$.OK) {\n"
       "    callback(new Error(msg));\n"
       "  }\n"
       "})\n"
@@ -200,7 +196,7 @@ namespace {
     , Printer&             printer
     )
   {
-
+    printer.Print(vars, "let req = this._client.$method_name$(request, metadata);\n");
   }
 
   void PrintAngularServiceImprobableEngServerStreamingCall
@@ -219,7 +215,7 @@ namespace {
       "  onMessage(response);\n"
       "}),\n"
       "onEnd: (code, msg, metadata) => this._ngZone.run(() => {\n"
-      "  if(code == grpc.Code.OK) {\n"
+      "  if(code == $statusCodeNamespace$.OK) {\n"
       "    onEnd(code, msg, metadata);\n"
       "  } else {\n"
       "    onError(new Error(code + ' ' + (msg||'')));\n"
@@ -242,6 +238,7 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
+    vars["statusCodeNamespace"] = options.grpcWebImplInfo.statusCodeNamespace;
     vars["service_name"] = method.service()->name();
     vars["method_name"] = firstCharToLower(method.name());
     vars["Method_name"] = method.name();
@@ -305,6 +302,7 @@ namespace {
     auto inputType = method.input_type();
     auto outputType = method.output_type();
 
+    vars["statusCodeNamespace"] = options.grpcWebImplInfo.statusCodeNamespace;
     vars["service_name"] = method.service()->name();
     vars["method_name"] = firstCharToLower(method.name());
     vars["Method_name"] = method.name();
@@ -357,16 +355,23 @@ namespace {
 
     switch(options.grpcWebImpl) {
       case GrpcWebImplementation::GWI_GOOGLE:
+        vars["cancel_method"] = "cancel";
         PrintAngularServiceGoogleServerStreamingCall(vars, printer);
         break;
       case GrpcWebImplementation::GWI_IMPROBABLE_ENG:
+        vars["cancel_method"] = "close";
         PrintAngularServiceImprobableEngServerStreamingCall(vars, printer);
         break;
     }
 
-    printer.Print("(<any>ret).close = () => req.close();\n");
-
-    printer.Print("return ret;\n");
+    printer.Print(vars, "(<any>ret).close = () => {\n");
+    printer.Indent();
+    printer.Print(vars, "console.warn('[Angular Grpc] .close() is deprecated use .cancel() instead');\n");
+    printer.Print(vars, "return req.$cancel_method$();\n");
+    printer.Outdent();
+    printer.Print("};\n");
+    printer.Print(vars, "(<any>ret).cancel = () => req.$cancel_method$();\n");
+    printer.Print(vars, "return ret;\n");
   }
 
   void PrintAngularServiceUnaryMethod
@@ -477,7 +482,7 @@ namespace {
       "(message?: " + outputType->name() + ") => void";
     vars["error_cb"] = "(err: any) => void";
     vars["end_cb"] = "("
-      "code: grpc.Code, "
+      "code: number, "
       "msg: string|undefined, "
       "metadata: grpc.Metadata"
     ") => void";
@@ -488,7 +493,7 @@ namespace {
     printer.Print(vars,
       "$method_name$("
         "request: $input_type$"
-      "): {close():void}&Observable<$output_type$>;\n"
+      "): {cancel():void;close():void}&Observable<$output_type$>;\n"
     );
 
     printCommentDoc<const MethodDescriptor&>(printer, method);
@@ -497,7 +502,7 @@ namespace {
       "$method_name$("
         "request: $input_type$, "
         "metadata: grpc.Metadata"
-      "): {close():void}&Observable<$output_type$>;\n"
+      "): {cancel():void;close():void}&Observable<$output_type$>;\n"
     );
 
     printCommentDoc<const MethodDescriptor&>(printer, method);
@@ -530,7 +535,7 @@ namespace {
         "arg2?: ($msg_cb$)|($error_cb$), "
         "arg3?: ($error_cb$)|($end_cb$), "
         "arg4?: $end_cb$"
-      "): {close():void}&Observable<$output_type$>|void {\n"
+      "): {cancel():void;close():void}&Observable<$output_type$>|void {\n"
     );
 
     printer.Indent();
@@ -639,7 +644,14 @@ namespace {
       auto service = file.service(i);
 
       vars["service_name"] = service->name();
-      printer.Print(vars, "$service_name$ as __$service_name$,\n");
+      switch(options.grpcWebImpl) {
+        case GWI_GOOGLE:
+          printer.Print(vars, "$service_name$Client as __$service_name$Client,\n");
+          break;
+        case GWI_IMPROBABLE_ENG:
+          printer.Print(vars, "$service_name$ as __$service_name$,\n");
+          break;
+      }
     }
     printer.Outdent();
     printer.Print(vars, "} from '$import_prefix$/$import_path$';\n");
@@ -653,20 +665,42 @@ namespace {
     )
   {
 
+    map<string, string> vars = {
+      {"service_name", service.name()}
+    };
+
     printer.PrintRaw("\n");
 
     printCommentDoc<const ServiceDescriptor&>(printer, service);
 
     printer.Print("@Injectable()\n");
-    printer.Print(("export class " + service.name() + " {\n\n").c_str());
+    printer.Print(vars, "export class $service_name$ {\n\n");
 
     printer.Indent();
 
-    printer.Print(
-      "constructor("
-        "private _ngZone: NgZone"
-      ") {}\n\n"
-    );
+    switch(options.grpcWebImpl) {
+      case GWI_GOOGLE:
+        printer.Print(vars, "private _client: __$service_name$Client;\n\n");
+        break;
+    }
+
+    printer.Print("constructor(private _ngZone: NgZone) {\n");
+    printer.Indent();
+
+    switch(options.grpcWebImpl) {
+      case GWI_GOOGLE:
+        printer.Print(vars, "this._client = new __$service_name$Client(\n");
+        printer.Indent();
+
+        printer.Print(vars, "(<any>window).DEFAULT_ANGULAR_GRPC_HOST || 'https://' + location.hostname,\n");
+
+        printer.Outdent();
+        printer.Print(vars, ");\n\n");
+        break;
+    }
+
+    printer.Outdent();
+    printer.Print("}\n\n");
 
     auto methodCount = service.method_count();
 

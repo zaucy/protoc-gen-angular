@@ -13,6 +13,7 @@ struct GrpcWebImplementationInfo {
   std::string commonjsImportAs;
   std::string metadataTypeName;
   std::string serviceFileSuffix;
+  std::string statusCodeNamespace;
 
   bool isValid() const;
 };
