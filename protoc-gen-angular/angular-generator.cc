@@ -182,7 +182,9 @@ namespace {
       "}),\n"
       "onEnd: (code, msg, metadata) => this._ngZone.run(() => {\n"
       "  if(code != $statusCodeNamespace$.OK) {\n"
-      "    callback(new Error(msg));\n"
+      "    let err = new Error(msg);\n"
+      "    (<any>err).code = code;\n"
+      "    callback(err);\n"
       "  }\n"
       "})\n"
     );
@@ -218,7 +220,9 @@ namespace {
       "  if(code == $statusCodeNamespace$.OK) {\n"
       "    onEnd(code, msg, metadata);\n"
       "  } else {\n"
-      "    onError(new Error(code + ' ' + (msg||'')));\n"
+      "    let err = new Error(code + ' ' + (msg||'');\n"
+      "    (<any>err).code = code;\n"
+      "    onError(err);\n"
       "  }\n"
       "})\n"
     );
