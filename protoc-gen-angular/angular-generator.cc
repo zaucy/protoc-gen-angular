@@ -220,7 +220,7 @@ namespace {
       "  if(code == $statusCodeNamespace$.OK) {\n"
       "    onEnd(code, msg, metadata);\n"
       "  } else {\n"
-      "    let err = new Error(code + ' ' + (msg||'');\n"
+      "    let err = new Error(code + ' ' + (msg||''));\n"
       "    (<any>err).code = code;\n"
       "    onError(err);\n"
       "  }\n"
