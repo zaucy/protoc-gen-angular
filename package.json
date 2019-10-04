@@ -8,8 +8,8 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@bazel/karma": "^0.31.1",
-    "@bazel/typescript": "^0.31.1",
+    "@bazel/karma": "~0.38.0",
+    "@bazel/typescript": "~0.38.0",
     "typescript": "^3.5.1"
   },
   "scripts": {

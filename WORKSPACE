@@ -7,10 +7,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
     name = "build_bazel_rules_nodejs",
-    sha256 = "e04a82a72146bfbca2d0575947daa60fda1878c8d3a3afe868a8ec39a6b968bb",
-    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.31.1/rules_nodejs-0.31.1.tar.gz"],
+    sha256 = "1249a60f88e4c0a46d78de06be04d3d41e7421dcfa0c956de65309a7b7ecf6f4",
+    urls = ["https://github.com/bazelbuild/rules_nodejs/releases/download/0.38.0/rules_nodejs-0.38.0.tar.gz"],
 )
-
 
 http_archive(
     name = "io_bazel_rules_sass",
@@ -22,7 +21,7 @@ http_archive(
 # The yarn_install rule runs yarn anytime the package.json or yarn.lock file
 # changes. It also extracts and installs any Bazel rules distributed in an npm
 # package.
-load("@build_bazel_rules_nodejs//:defs.bzl", "yarn_install")
+load("@build_bazel_rules_nodejs//:index.bzl", "yarn_install")
 yarn_install(
     # Name this npm so that Bazel Label references look like @npm//package
     name = "npm",
@@ -35,8 +34,8 @@ load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
 install_bazel_dependencies()
 
 # Load karma dependencies
-load("@npm_bazel_karma//:package.bzl", "rules_karma_dependencies")
-rules_karma_dependencies()
+load("@npm_bazel_karma//:package.bzl", "npm_bazel_karma_dependencies")
+npm_bazel_karma_dependencies()
 
 # Setup the rules_webtesting toolchain
 load(
@@ -52,7 +51,7 @@ load(
 browser_repositories()
 
 # Setup the rules_typescript tooolchain
-load("@npm_bazel_typescript//:defs.bzl", "ts_setup_workspace")
+load("@npm_bazel_typescript//:index.bzl", "ts_setup_workspace")
 ts_setup_workspace()
 
 # Setup the rules_sass toolchain
