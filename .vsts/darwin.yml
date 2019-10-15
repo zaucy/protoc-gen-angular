@@ -2,7 +2,7 @@ steps:
 
 - script: sudo xcodebuild -license accept
   workingDirectory: $(Build.SourcesDirectory)
-- script: curl -L -o ./bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.16.1-installer-darwin-x86_64.sh 
+- script: curl -L -o ./bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/1.0.0/bazel-1.0.0-installer-darwin-x86_64.sh 
   workingDirectory: $(Build.SourcesDirectory)
 
 - script: chmod +x ./bazel-installer.sh && ./bazel-installer.sh --user

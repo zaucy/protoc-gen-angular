@@ -3,7 +3,7 @@ steps:
 - script: sudo apt-get install -y pkg-config zip g++-4.9 zlib1g-dev unzip python && sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-4.9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-4.9
   workingDirectory: $(Build.SourcesDirectory)
 
-- script: curl -L -o bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/0.16.1/bazel-0.16.1-installer-linux-x86_64.sh
+- script: curl -L -o bazel-installer.sh https://github.com/bazelbuild/bazel/releases/download/1.0.0/bazel-1.0.0-installer-linux-x86_64.sh
   workingDirectory: $(Build.SourcesDirectory)
 
 - script: chmod +x ./bazel-installer.sh && ./bazel-installer.sh --user
