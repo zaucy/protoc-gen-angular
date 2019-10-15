@@ -21,13 +21,14 @@ def _ng_proto_module_srcs_impl(ctx):
   pkgLabel = ctx.label.package
 
   for dep in ctx.attr.deps:
-    if hasattr(dep, "proto"):
+    if dep[ProtoInfo]:
+      protoInfo = dep[ProtoInfo]
       protoPaths = depset(transitive = [
         protoPaths,
-        dep.proto.transitive_proto_path,
+        protoInfo.transitive_proto_path,
       ])
-      protoSrcsRoots.append(dep.proto.proto_source_root)
-      sources = depset(transitive = [sources, dep.proto.transitive_sources])
+      protoSrcsRoots.append(protoInfo.proto_source_root)
+      sources = depset(transitive = [sources, protoInfo.transitive_sources])
 
   outFiles = []
 
