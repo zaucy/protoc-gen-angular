@@ -24,18 +24,6 @@ using std::vector;
 
 namespace {
 
-  std::string getImportPrefix(const std::string& filename) {
-    std::string importPrefix;
-
-    for(const char& c : filename) {
-      if(c == '/') {
-        importPrefix += "../";
-      }
-    }
-
-    return importPrefix;
-  }
-
   std::string removePathExtname(const std::string& path) {
     auto dotIndex = path.find_last_of('.');
 
@@ -46,27 +34,9 @@ namespace {
     return path;
   }
 
-  std::string parentPath(const std::string& path) {
-    auto slashIndex = path.find_last_of('/');
-
-    if(slashIndex != std::string::npos) {
-      return path.substr(0, slashIndex);
-    }
-
-    return "";
-  }
-
   std::string firstCharToLower(std::string str) {
     if(str.length() > 0) {
       str[0] = std::tolower(str[0]);
-    }
-
-    return str;
-  }
-
-  std::string firstCharToUpper(std::string str) {
-    if(str.length() > 0) {
-      str[0] = std::toupper(str[0]);
     }
 
     return str;
@@ -291,6 +261,8 @@ namespace {
       case GrpcWebImplementation::GWI_GOOGLE:
         PrintAngularServiceGoogleUnaryCall(vars, printer);
         break;
+      case GrpcWebImplementation::GWI_NONE:
+        break;
     }
 
     printer.Print("return ret;\n");
@@ -365,6 +337,8 @@ namespace {
       case GrpcWebImplementation::GWI_IMPROBABLE_ENG:
         vars["cancel_method"] = "close";
         PrintAngularServiceImprobableEngServerStreamingCall(vars, printer);
+        break;
+      case GrpcWebImplementation::GWI_NONE:
         break;
     }
 
@@ -649,11 +623,13 @@ namespace {
 
       vars["service_name"] = service->name();
       switch(options.grpcWebImpl) {
-        case GWI_GOOGLE:
+        case GrpcWebImplementation::GWI_GOOGLE:
           printer.Print(vars, "$service_name$Client as __$service_name$Client,\n");
           break;
-        case GWI_IMPROBABLE_ENG:
+        case GrpcWebImplementation::GWI_IMPROBABLE_ENG:
           printer.Print(vars, "$service_name$ as __$service_name$,\n");
+          break;
+        case GrpcWebImplementation::GWI_NONE:
           break;
       }
     }
@@ -683,8 +659,10 @@ namespace {
     printer.Indent();
 
     switch(options.grpcWebImpl) {
-      case GWI_GOOGLE:
+      case GrpcWebImplementation::GWI_GOOGLE:
         printer.Print(vars, "private _client: __$service_name$Client;\n\n");
+        break;
+      default:
         break;
     }
 
@@ -692,7 +670,7 @@ namespace {
     printer.Indent();
 
     switch(options.grpcWebImpl) {
-      case GWI_GOOGLE:
+      case GrpcWebImplementation::GWI_GOOGLE:
         printer.Print(vars, "this._client = new __$service_name$Client(\n");
         printer.Indent();
 
@@ -700,6 +678,8 @@ namespace {
 
         printer.Outdent();
         printer.Print(vars, ");\n\n");
+        break;
+      default:
         break;
     }
 
