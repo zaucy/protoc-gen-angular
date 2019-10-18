@@ -139,7 +139,7 @@ namespace {
 
     printer.Print(vars, "let responseMetadata: grpc.Metadata|null = null;\n\n");
 
-    printer.Print(vars, "grpc.invoke(__$service_name$.$Method_name$, {\n");
+    printer.Print(vars, "let req = grpc.invoke(__$service_name$.$Method_name$, {\n");
     printer.Indent();
 
     printer.Print(vars,
@@ -256,14 +256,18 @@ namespace {
 
     switch(options.grpcWebImpl) {
       case GrpcWebImplementation::GWI_IMPROBABLE_ENG:
+        vars["cancel_method"] = "close";
         PrintAngularServiceImprobableEngUnaryCall(vars, printer);
         break;
       case GrpcWebImplementation::GWI_GOOGLE:
+        vars["cancel_method"] = "cancel";
         PrintAngularServiceGoogleUnaryCall(vars, printer);
         break;
       case GrpcWebImplementation::GWI_NONE:
         break;
     }
+
+    printer.Print(vars, "(<any>ret).cancel = () => req.$cancel_method$();\n");
 
     printer.Print("return ret;\n");
   }
