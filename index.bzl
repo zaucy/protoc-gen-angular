@@ -41,8 +41,6 @@ def _ng_proto_module_srcs_impl(ctx):
 
     if srcBasename.startswith(ctx.bin_dir.path):
       srcBasename = srcBasename[len(ctx.bin_dir.path)+1:]
-    if src.owner != None and src.owner.workspace_root:
-        srcBasename = srcBasename[len(src.owner.workspace_root)+1:]
     
     filename = srcBasename + "_ng_grpc_pb.ts"
     file = ctx.actions.declare_file(filename)
