@@ -482,7 +482,7 @@ namespace {
     filename = filename.substr(0, filename.size() - 6);
 
     vars["service_name"] = service.name();
-    vars["service_import"] = filename + "_pb_service";
+    vars["service_import"] = filename + "_grpcjs_pb_service";
     vars["file_import_prefix"] = getImportPrefix(filename);
     printer.Print("import { Injectable, NgZone } from '@angular/core';\n");
     printer.Print("import { Observable } from 'rxjs';\n");
@@ -499,7 +499,7 @@ namespace {
       filename = filename.substr(0, filename.size() - 6);
 
       importVars["import_name"] = importName;
-      importVars["type_import"] = filename + "_pb";
+      importVars["type_import"] = filename + "_grpcjs_pb";
 
       printer.Print(importVars,
         "import { $import_name$ } from '$file_import_prefix$$web_import_prefix$/$type_import$';\n");
