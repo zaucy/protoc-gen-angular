@@ -233,6 +233,8 @@ namespace {
       case GrpcWebImplementation::GOOGLE:
         PrintAngularServiceGoogleUnaryCall(vars, printer);
         break;
+      default:
+        break;
     }
 
     printer.Print("return ret;\n");
@@ -299,6 +301,8 @@ namespace {
         break;
       case GrpcWebImplementation::IMPROBABLE_ENG:
         PrintAngularServiceImprobableEngServerStreamingCall(vars, printer);
+        break;
+      default:
         break;
     }
 
